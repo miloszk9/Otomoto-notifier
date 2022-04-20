@@ -4,21 +4,25 @@ import yaml
 import logging
 from bs4 import BeautifulSoup as soup
 
-def load_urls(url_path):
+def load_properties(yaml_path):
     logging.info("Loading URLs started")
-    with open(url_path, 'r') as file:
+    with open(yaml_path, 'r') as file:
         try:
-            urls_yaml = yaml.safe_load(file)
-            logging.info("Loading URLs finished successfully")
+            yaml_dict = yaml.safe_load(file)
+            logging.info("Yaml file successfully loaded")
 
-            if 'urls' in urls_yaml and len(urls_yaml['urls']):
-                return urls_yaml['urls']
+            if 'urls' not in yaml_dict or len(yaml_dict['urls']) == 0:
+                logging.error("Yaml config does not contain any URLs or urls section")
+                return False
 
-            logging.error("File does not contain any URLs or urls section", exc)
-            return False
+            if 'dest_email' not in yaml_dict or len(yaml_dict['dest_email']) == 0:
+                logging.error("Yaml config does not contain email address")
+                return False
+
+            return yaml_dict
 
         except yaml.YAMLError as exc:
-            logging.error("Failed to load URLs", exc)
+            logging.error("Failed to load yaml file", exc)
             return False
 
 def http_parser(url):
@@ -58,5 +62,5 @@ def http_parser(url):
 
         logging.info(f'Searched car: name: {car_name}, year: {car_year}, price: {car_price}, pow: {car_engine_power}')
 
-def email_sender():
+def email_sender(src_address, src_passwd, dest_address):
     pass
