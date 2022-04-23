@@ -2,6 +2,7 @@ import requests
 import re
 import yaml
 import logging
+from jinja2 import Environment, FileSystemLoader
 from bs4 import BeautifulSoup as soup
 
 def load_properties(yaml_path):
@@ -25,7 +26,7 @@ def load_properties(yaml_path):
             logging.error("Failed to load yaml file", exc)
             return False
 
-def http_parser(url):
+def parse_html(url):
     webpage = requests.get(url)
     webpage_parsed = soup(webpage.content, 'html.parser')
 
@@ -62,5 +63,15 @@ def http_parser(url):
 
         logging.info(f'Searched car: name: {car_name}, year: {car_year}, price: {car_price}, pow: {car_engine_power}')
 
-def email_sender(src_address, src_passwd, dest_address):
+def render_email():
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('email_template.html')
+    template_rendered = template.render()
+
+    with open("out.html", "w") as file:
+        file.write(template_rendered)
+
+def send_email(src_address, src_passwd, dest_address):
     pass
+
+render_email()

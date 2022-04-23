@@ -14,7 +14,7 @@ def main():
     yaml_dict = functions.load_urls(yaml_path)
 
     for url in yaml_dict['urls']:
-        functions.http_parser(url)
+        functions.parse_html(url)
     
     # yaml_dict['dest_email']
 
