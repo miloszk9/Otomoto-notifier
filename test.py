@@ -1,3 +1,4 @@
+import os
 from functions import *
 
 def test_render_email():
@@ -23,6 +24,8 @@ def test_render_email():
     with open("out.html", "w") as file:
         file.write(render)
 
+    return render
+
 def test_parse_html():
     url = 'https://www.otomoto.pl/osobowe/renault/megane/seg-city-car--seg-coupe/od-2008/podkarpackie?search%5Bfilter_enum_generation%5D=gen-iii-2008-2016&search%5Bfilter_float_year%3Ato%5D=2013&search%5Bfilter_float_mileage%3Ato%5D=240000&search%5Bfilter_float_price%3Afrom%5D=13000&search%5Bfilter_float_price%3Ato%5D=20000&search%5Border%5D=created_at_first%3Adesc&search%5Badvanced_search_expanded%5D=true'
     result_json = parse_html(url)
@@ -30,4 +33,12 @@ def test_parse_html():
 
 if __name__ == "__main__":
     # test_render_email()
-    test_parse_html()
+    # test_parse_html()
+
+    # Render and send email
+    src_address = os.getenv('EMAIL_ADDR')
+    src_passwd = os.getenv('EMAIL_PASSWD')
+    dest_address = os.getenv('EMAIL_ADDR2')
+    email_subject = "Otomoto notifier - test"
+    mail_content = test_render_email()
+    send_email(src_address, src_passwd, dest_address, email_subject, mail_content)

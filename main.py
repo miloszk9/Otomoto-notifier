@@ -3,12 +3,12 @@ import logging
 import functions
 
 def main():
-    # email_src_address = os.getenv('EMAIL_ADDR')
-    # email_src_passwd = os.getenv('EMAIL_PASSWD')
+    email_src_address = os.getenv('EMAIL_ADDR')
+    email_src_passwd = os.getenv('EMAIL_PASSWD')
 
-    # if not email_address or not email_passwd:
-    #     logging.ERROR("Email address or password not set")
-    #     return False
+    if not email_src_address or not email_src_passwd:
+        logging.ERROR("Email address or password not set")
+        return False
 
     yaml_path = os.getenv('URL_FILE', './config.yml')
     yaml_dict = functions.load_properties(yaml_path)
