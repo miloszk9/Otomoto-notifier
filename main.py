@@ -11,7 +11,7 @@ def main():
     #     return False
 
     yaml_path = os.getenv('URL_FILE', './config.yml')
-    yaml_dict = functions.load_urls(yaml_path)
+    yaml_dict = functions.load_properties(yaml_path)
 
     for url in yaml_dict['urls']:
         functions.parse_html(url)

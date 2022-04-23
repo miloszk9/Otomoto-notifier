@@ -134,7 +134,8 @@
                                                 </tr>
                                               </tbody>
                                             </table>
-                                            {% for car in cars.available %}
+                                            {% for index in cars.new %}
+                                              {% set car = cars.new[index] %}
                                               {% include 'car_template.html' %}
                                             {% endfor %}                                            
                                             <table class="s-5 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
@@ -225,7 +226,8 @@
                                                 </tr>
                                               </tbody>
                                             </table>
-                                            {% for car in cars.available %}
+                                            {% for index in cars.available %}
+                                              {% set car = cars.available[index] %}
                                               {% include 'car_template.html' %}
                                             {% endfor %}                                            
                                             <table class="s-5 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
@@ -298,7 +300,8 @@
                                                 </tr>
                                               </tbody>
                                             </table>
-                                            {% for car in cars.available %}
+                                            {% for index in cars.gone %}
+                                              {% set car = cars.gone[index] %}
                                               {% include 'car_template.html' %}
                                             {% endfor %}                                            
                                             <table class="s-5 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
