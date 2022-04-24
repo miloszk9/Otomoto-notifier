@@ -90,6 +90,7 @@
                                                 </tr>
                                               </tbody>
                                             </table>
+                                            {% if cars.new is defined and cars.new|length > 0 %}
                                             <table class="ax-center" role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                                               <tbody>
                                                 <tr>
@@ -164,6 +165,8 @@
                                                 </tr>
                                               </tbody>
                                             </table>
+                                            {% endif %}
+                                            {% if cars.available is defined and cars.available|length > 0 %}
                                             <table class="ax-center" role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                                               <tbody>
                                                 <tr>
@@ -256,6 +259,8 @@
                                                 </tr>
                                               </tbody>
                                             </table>
+                                            {% endif %}
+                                            {% if cars.gone is defined and cars.gone|length > 0 %}
                                             <table class="ax-center" role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                                               <tbody>
                                                 <tr>
@@ -330,6 +335,7 @@
                                                 </tr>
                                               </tbody>
                                             </table>
+                                            {% endif %}
                                             <!-- <a class="btn btn-primary ax-center" href="/" target="_blank">Link</a> -->
                                           </td>
                                         </tr>

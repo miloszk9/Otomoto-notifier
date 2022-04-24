@@ -3,6 +3,7 @@ import re
 import yaml
 import logging
 import smtplib
+import json
 
 from jinja2 import Environment, FileSystemLoader
 from bs4 import BeautifulSoup as soup
@@ -10,6 +11,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 def load_properties(yaml_path):
+    '''
+    Load properties from yaml file
+    '''
     logging.info("Loading URLs started")
     with open(yaml_path, 'r') as file:
         try:
@@ -27,10 +31,13 @@ def load_properties(yaml_path):
             return yaml_dict
 
         except yaml.YAMLError as exc:
-            logging.error("Failed to load yaml file", exc)
+            logging.error("Failed to load yaml file", str(exc))
             return False
 
-def parse_html(url):
+def scrape_http_data(url):
+    '''
+    Scrape data from otomoto website
+    '''
     cars_list = dict()
 
     webpage = requests.get(url)
@@ -65,7 +72,10 @@ def parse_html(url):
 
         price_info = result.find_all("div")[3]
         car['car_price'] = price_info.find_next("span").get_text()
-        car['car_otomoto_rating'] = price_info.find_next("div").find_next("p").get_text()
+        if price_info.findChildren("div"):
+            car['car_otomoto_rating'] = price_info.find_next("div").find_next("p").get_text()
+        else:
+            car['car_otomoto_rating'] = ""
 
         car_webpage_parsed = soup(requests.get(primary_info['href']).content, 'html.parser')
         car_params = car_webpage_parsed.find_all("li", {"class": "offer-params__item"})
@@ -82,7 +92,74 @@ def parse_html(url):
         
     return cars_list
 
+def analyze_data(cars_list, is_hourly):
+    '''
+    Analyze data and update results
+    '''
+    logging.info(f'Analyzing data started. Daily is set to {str(is_hourly)}')
+    final_dict = {
+        'new': {},
+        'available': {},
+        'gone': {}
+    }
+
+    if is_hourly:
+        result_path = 'results/daily.json'
+    else:
+        result_path = 'results/hourly.json'
+
+    with open(result_path, 'r') as previous_file:
+        previous_json = previous_file.read()
+        if previous_json:
+            # File is not empty
+            logging.info(f'Cars found in result json.')
+            previous_results = json.loads(previous_json)
+
+            for car in cars_list:
+                if car in previous_results['new'] or car in previous_results['available'] or car in previous_results['gone']:
+                    # Car that was already available before
+                    logging.debug(f'Car already available - {cars_list[car]["car_name"]}')
+                    final_dict['available'][car] = cars_list[car]
+                else:
+                    # New car
+                    logging.debug(f'New car found - {cars_list[car]["car_name"]}')
+                    final_dict['new'][car] = cars_list[car]
+            
+            for previous_car in previous_results['new'].keys():
+                if previous_car not in cars_list.keys():
+                    # Car that is not available now, but was before
+                    logging.info(f'Car is gone - {previous_car}')
+                    final_dict['gone'][previous_car] = previous_results['new'][previous_car]
+            for previous_car in previous_results['available'].keys():
+                if previous_car not in cars_list.keys():
+                    # Car that is not available now, but was before
+                    logging.info(f'Car is gone - {previous_car}')
+                    final_dict['gone'][previous_car] = previous_results['available'][previous_car]
+
+        else:
+            # Empty file - add every car to 'new' section
+            logging.info(f'No cars found in result json.')
+            for car in cars_list:
+                final_dict['new'][car] = cars_list[car]
+
+    try:
+        with open(result_path, "w") as file:
+            file.write(json.dumps(final_dict))
+    except Exception as exc:
+        logging.error("Failed to save results to file, ", str(exc))
+        return False
+
+
+    logging.info('Analyzing data finished successfully.')
+    logging.info(f'Analyzing data statistics: New = {len(final_dict["new"])}, \
+                   Available = {len(final_dict["available"])}, Gone = {len(final_dict["gone"])}.')
+    
+    return final_dict
+
 def render_email(search_resaults):
+    '''
+    Render html email from given search results
+    '''
     try:
         env = Environment(loader=FileSystemLoader('templates'))
         template = env.get_template('email_template.html')
@@ -94,11 +171,17 @@ def render_email(search_resaults):
         logging.error("Failed to render email. Error: ", str(exc))
         return False
 
-def send_email(src_address, src_passwd, dest_address, email_subject, mail_content):
+def send_email(src_address, src_passwd, dest_address, is_hourly, mail_content):
+    '''
+    Send html email
+    '''
     message = MIMEMultipart()
     message['From'] = src_address
     message['To'] = dest_address
-    message['Subject'] = email_subject
+    if is_hourly:
+        message['Subject'] = 'Otomoto Notifier - update'
+    else:
+        message['Subject'] = 'Otomoto Notifier - Daily update'
     logging.info(f"Sending email to {dest_address}.")
 
     try:
