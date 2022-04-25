@@ -1,3 +1,4 @@
+import os
 import requests
 import re
 import yaml
@@ -114,10 +115,12 @@ def analyze_data(cars_list, is_hourly):
         'gone': {}
     }
 
+    dirname = os.path.dirname(__file__)
+
     if is_hourly:
-        result_path = 'results/hourly.json'
+        result_path = os.path.join(dirname, 'results/hourly.json')
     else:
-        result_path = 'results/daily.json'
+        result_path = os.path.join(dirname, 'results/daily.json')
 
     with open(result_path, 'r') as previous_file:
         previous_json = previous_file.read()
@@ -171,8 +174,9 @@ def render_email(search_resaults):
     '''
     Render html email from given search results
     '''
+    dirname = os.path.dirname(__file__)
     try:
-        env = Environment(loader=FileSystemLoader('templates'))
+        env = Environment(loader=FileSystemLoader(os.path.join(dirname, 'templates')))
         template = env.get_template('email_template.html')
         template_rendered = template.render(cars = search_resaults)
         logging.info("Email successfully rendered")

@@ -3,9 +3,9 @@ import logging
 import functions
 
 def main():
-    yaml_path = os.getenv('URL_FILE', './config.yml')
+    dirname = os.path.dirname(__file__)
 
-    yaml_dict = functions.load_properties(yaml_path)
+    yaml_dict = functions.load_properties(os.path.join(dirname, 'config.yml'))
 
     if not yaml_dict:
         logging.error("Loading propoerties failed.")
