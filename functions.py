@@ -104,9 +104,9 @@ def analyze_data(cars_list, is_hourly):
     }
 
     if is_hourly:
-        result_path = 'results/daily.json'
-    else:
         result_path = 'results/hourly.json'
+    else:
+        result_path = 'results/daily.json'
 
     with open(result_path, 'r') as previous_file:
         previous_json = previous_file.read()
