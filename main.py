@@ -3,15 +3,13 @@ import logging
 import functions
 
 def main():
-    email_src_address = os.getenv('EMAIL_ADDR')
-    email_src_passwd = os.getenv('EMAIL_PASSWD')
-
-    if not email_src_address or not email_src_passwd:
-        logging.error("Email address or password not set")
-        return False
-
     yaml_path = os.getenv('URL_FILE', './config.yml')
+
     yaml_dict = functions.load_properties(yaml_path)
+
+    if not yaml_dict:
+        logging.error("Loading propoerties failed.")
+        return False
 
     cars_dict = dict()
 
@@ -44,7 +42,8 @@ def main():
         return False
     
     for dest_email in yaml_dict['dest_email']:
-        send_status = functions.send_email(email_src_address, email_src_passwd, dest_email, is_hourly, html_template)
+        send_status = functions.send_email(yaml_dict['src_email_addr'], yaml_dict['src_email_passwd'],
+                                           dest_email, is_hourly, html_template)
     
         if not send_status:
             logging.error("Failed to send email")
