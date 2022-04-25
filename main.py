@@ -16,7 +16,14 @@ def main():
     cars_dict = dict()
 
     for url in yaml_dict['urls']:
-        cars_list = functions.scrape_http_data(url)
+        for retry in range(1,6):
+            try:
+                cars_list = functions.scrape_http_data(url)
+            except Exception as exc:
+                logging.error(f"URL {url} was not successfully fetched, retry number: {retry}")
+            else:
+                break
+
         if cars_list:
             cars_dict.update(cars_list)
 

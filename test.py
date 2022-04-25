@@ -1,5 +1,7 @@
 import os
 import json
+from time import sleep
+from random import random
 from functions import *
 
 def test_render_email():
@@ -47,8 +49,34 @@ def test_scrape_http_data():
 
     return result_json
 
+def test_scrape_http_data_retries():
+    with_retry = 0
+    without_retry = 0
+    for x in range(20):
+        try:
+            result_dict = test_scrape_http_data()
+        except:
+            logging.error(f"URL was not successfully fetched, NO RETRY")
+        if type(result_dict) != dict:
+            without_retry += 1
+        sleep(0.5 + random())
+    for x in range(20):
+        for retry in range(1,5):
+            try:
+                result_dict = test_scrape_http_data()
+            except Exception as exc:
+                logging.error(f"URL was not successfully fetched, retry number: {retry}")
+            else:
+                break
+        if type(result_dict) != dict:
+            with_retry += 1
+        sleep(0.5 + random())
+
+    print(f'With retires: {with_retry}')
+    print(f'Without retires: {without_retry}')
+
 if __name__ == "__main__":
-    test_render_email()
+    # test_render_email()
     # result_dict = test_scrape_http_data()
     # print(result_dict)
 
@@ -65,4 +93,5 @@ if __name__ == "__main__":
     # mail_content = test_render_email()
     # send_email(src_address, src_passwd, dest_address, email_subject, mail_content)
 
+    test_scrape_http_data_retries()
     print('end')
