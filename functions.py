@@ -50,6 +50,9 @@ def scrape_http_data(url):
 
     search_results = webpage_parsed.find_all("article", {"data-testid": "listing-ad"})
 
+    if len(search_results) == 0:
+        raise Exception("Webpage has not loaded correctly")
+
     for result in search_results:
         car = dict()
 
