@@ -41,9 +41,10 @@ def test_render_email():
         },
         'gone':{}
     }
-    render = render_email(cars)
-    with open("out.html", "w") as file:
-        file.write(render)
+    dirname = os.path.dirname(__file__)
+    render = render_email(cars, dirname)
+    # with open("out.html", "w") as file:
+    #     file.write(render)
 
     return render
 
@@ -81,8 +82,8 @@ def test_scrape_http_data_retries():
     print(f'Without retires: {without_retry}')
 
 if __name__ == "__main__":
-    prop = test_load_properties()
-    print(prop)
+    yaml_dict = test_load_properties()
+    print(yaml_dict)
 
     # test_render_email()
     # result_dict = test_scrape_http_data()
@@ -97,9 +98,9 @@ if __name__ == "__main__":
     # src_address = os.getenv('EMAIL_ADDR')
     # src_passwd = os.getenv('EMAIL_PASSWD')
     # dest_address = os.getenv('EMAIL_ADDR2')
-    # email_subject = "Otomoto notifier - test"
-    # mail_content = test_render_email()
-    # send_email(src_address, src_passwd, dest_address, email_subject, mail_content)
+    email_subject = "Otomoto notifier - test"
+    mail_content = test_render_email()
+    send_email(yaml_dict['src_email_addr'], yaml_dict['src_email_passwd'], yaml_dict['dest_email'][0], email_subject, mail_content)
 
     #test_scrape_http_data_retries()
     print('end')
