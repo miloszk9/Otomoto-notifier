@@ -47,6 +47,11 @@ def main():
     
         if not send_status:
             logging.error("Failed to send email")
+            if is_hourly:
+                open(os.path.join(dirname, 'volume/hourly.json'), 'w').close()
+            else:
+                open(os.path.join(dirname, 'volume/daily.json'), 'w').close()
+
             return False
 
     return True

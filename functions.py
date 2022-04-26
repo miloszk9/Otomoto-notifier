@@ -21,11 +21,11 @@ def load_properties(yaml_path):
             yaml_dict = yaml.safe_load(file)
             logging.info("Yaml file successfully loaded")
 
-            if 'src_email_addr' not in yaml_dict or len(yaml_dict['src_email_addr']) == 0:
+            if 'src_email_addr' not in yaml_dict or not yaml_dict['src_email_addr']:
                 logging.error("Yaml config does not contain source email address")
                 return False
 
-            if 'src_email_passwd' not in yaml_dict or len(yaml_dict['src_email_passwd']) == 0:
+            if 'src_email_passwd' not in yaml_dict or not yaml_dict['src_email_passwd'] == 0:
                 logging.error("Yaml config does not contain email password")
                 return False
 
