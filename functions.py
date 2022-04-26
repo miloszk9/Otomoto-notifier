@@ -104,7 +104,7 @@ def scrape_http_data(url):
         
     return cars_list
 
-def analyze_data(cars_list, is_hourly):
+def analyze_data(cars_list, is_hourly, dirname):
     '''
     Analyze data and update results
     '''
@@ -115,12 +115,10 @@ def analyze_data(cars_list, is_hourly):
         'gone': {}
     }
 
-    dirname = os.path.dirname(__file__)
-
     if is_hourly:
-        result_path = os.path.join(dirname, 'results/hourly.json')
+        result_path = os.path.join(dirname, 'volume/hourly.json')
     else:
-        result_path = os.path.join(dirname, 'results/daily.json')
+        result_path = os.path.join(dirname, 'volume/daily.json')
 
     with open(result_path, 'r') as previous_file:
         previous_json = previous_file.read()
@@ -170,11 +168,10 @@ def analyze_data(cars_list, is_hourly):
     
     return final_dict
 
-def render_email(search_resaults):
+def render_email(search_resaults, dirname):
     '''
     Render html email from given search results
     '''
-    dirname = os.path.dirname(__file__)
     try:
         env = Environment(loader=FileSystemLoader(os.path.join(dirname, 'templates')))
         template = env.get_template('email_template.html')

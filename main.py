@@ -5,7 +5,7 @@ import functions
 def main():
     dirname = os.path.dirname(__file__)
 
-    yaml_dict = functions.load_properties(os.path.join(dirname, 'config.yml'))
+    yaml_dict = functions.load_properties(os.path.join(dirname, 'volume/config.yml'))
 
     if not yaml_dict:
         logging.error("Loading propoerties failed.")
@@ -26,7 +26,7 @@ def main():
             cars_dict.update(cars_list)
 
     is_hourly = os.getenv('IS_HOURLY', False)
-    processed_dict = functions.analyze_data(cars_dict, is_hourly)
+    processed_dict = functions.analyze_data(cars_dict, is_hourly, dirname)
 
     if type(processed_dict) is not dict:
         logging.error("Failed to analyze data")
@@ -36,7 +36,7 @@ def main():
         logging.info("No updates to be send.")
         return True
         
-    html_template = functions.render_email(processed_dict)
+    html_template = functions.render_email(processed_dict, dirname)
     if not html_template:
         logging.error("Failed to render email")
         return False
