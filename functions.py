@@ -25,7 +25,7 @@ def load_properties(yaml_path):
                 logging.error("Yaml config does not contain source email address")
                 return False
 
-            if 'src_email_passwd' not in yaml_dict or not yaml_dict['src_email_passwd'] == 0:
+            if 'src_email_passwd' not in yaml_dict or not yaml_dict['src_email_passwd']:
                 logging.error("Yaml config does not contain email password")
                 return False
 

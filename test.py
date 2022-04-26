@@ -4,6 +4,11 @@ from time import sleep
 from random import random
 from functions import *
 
+def test_load_properties():
+    dirname = os.path.dirname(__file__)
+    yaml_dict = load_properties(os.path.join(dirname, 'volume/config.yml'))
+    return yaml_dict
+
 def test_render_email():
     cars = {
         'new':{
@@ -76,6 +81,9 @@ def test_scrape_http_data_retries():
     print(f'Without retires: {without_retry}')
 
 if __name__ == "__main__":
+    prop = test_load_properties()
+    print(prop)
+
     # test_render_email()
     # result_dict = test_scrape_http_data()
     # print(result_dict)
@@ -93,5 +101,5 @@ if __name__ == "__main__":
     # mail_content = test_render_email()
     # send_email(src_address, src_passwd, dest_address, email_subject, mail_content)
 
-    test_scrape_http_data_retries()
+    #test_scrape_http_data_retries()
     print('end')
