@@ -10,6 +10,7 @@ COPY ./requirements.txt /app/
 
 RUN python3 -m pip install -r requirements.txt
 
+COPY ./templates /app/
 COPY ./main.py /app/
 COPY ./functions.py /app/
 COPY ./cron-job.txt /app/
