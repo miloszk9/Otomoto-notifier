@@ -1,13 +1,13 @@
 # Otomoto notifier
 
 ## Prerequirements
-* Docker
+* Container tool like Docker or Podman
 
 ## Installation
 ```sh
 $ docker build -t otomoto-notifier .
 $ docker run -d \
+  -v "$(pwd)"/volume:/app/volume:Z \
   --name=otomoto-notifier \
-  --mount type=bind,source="$(pwd)"/volume,target=/app/volume \
   otomoto-notifier:latest
 ```
