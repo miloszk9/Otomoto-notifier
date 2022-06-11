@@ -43,6 +43,7 @@ def main():
     
     for dest_email in yaml_dict['dest_email']:
         send_status = functions.send_email(yaml_dict['src_email_addr'], yaml_dict['src_email_passwd'],
+                                           yaml_dict['src_email_smtp_addr'], yaml_dict['src_email_smtp_port'],
                                            dest_email, is_hourly, html_template)
     
         if not send_status:

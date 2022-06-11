@@ -100,7 +100,9 @@ if __name__ == "__main__":
     # dest_address = os.getenv('EMAIL_ADDR2')
     email_subject = "Otomoto notifier - test"
     mail_content = test_render_email()
-    send_email(yaml_dict['src_email_addr'], yaml_dict['src_email_passwd'], yaml_dict['dest_email'][0], email_subject, mail_content)
+    send_email(yaml_dict['src_email_addr'], yaml_dict['src_email_passwd'],
+               yaml_dict['src_email_smtp_addr'], yaml_dict['src_email_smtp_port'],
+               yaml_dict['dest_email'][0], email_subject, mail_content)
 
     #test_scrape_http_data_retries()
     print('end')

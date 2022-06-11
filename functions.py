@@ -183,7 +183,7 @@ def render_email(search_resaults, dirname):
         logging.error("Failed to render email. Error: ", str(exc))
         return False
 
-def send_email(src_address, src_passwd, dest_address, is_hourly, mail_content):
+def send_email(src_address, src_passwd, smtp_addr, smtp_port, dest_address, is_hourly, mail_content):
     '''
     Send html email
     '''
@@ -198,7 +198,7 @@ def send_email(src_address, src_passwd, dest_address, is_hourly, mail_content):
 
     try:
         message.attach(MIMEText(mail_content, 'html'))
-        session = smtplib.SMTP('smtp.gmail.com', 587)
+        session = smtplib.SMTP(smtp_addr, smtp_port)
         session.starttls()
         session.login(src_address, src_passwd)
         text = message.as_string()
