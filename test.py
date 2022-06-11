@@ -99,7 +99,8 @@ if __name__ == "__main__":
     # src_passwd = os.getenv('EMAIL_PASSWD')
     # dest_address = os.getenv('EMAIL_ADDR2')
     email_subject = "Otomoto notifier - test"
-    mail_content = test_render_email()
+    # mail_content = test_render_email()
+    mail_content = 'test'
     send_email(yaml_dict['src_email_addr'], yaml_dict['src_email_passwd'],
                yaml_dict['src_email_smtp_addr'], yaml_dict['src_email_smtp_port'],
                yaml_dict['dest_email'][0], email_subject, mail_content)

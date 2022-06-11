@@ -15,6 +15,7 @@ def main():
 
     for url in yaml_dict['urls']:
         for retry in range(1,6):
+            cars_list = None
             try:
                 cars_list = functions.scrape_http_data(url)
             except Exception as exc:
