@@ -5,9 +5,10 @@
 
 ## Installation
 ```sh
-$ docker build -t otomoto-notifier .
-$ docker run -d \
+$ podman build -t otomoto-notifier .
+$ podman run -d \
   -v "$(pwd)"/volume:/app/volume:Z \
   --name=otomoto-notifier \
+  --network=podman \
   otomoto-notifier:latest
 ```
